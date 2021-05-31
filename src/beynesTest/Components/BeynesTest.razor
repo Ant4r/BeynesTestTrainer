@@ -1,0 +1,178 @@
+@using System.Drawing
+@using System.Threading
+@using BeynesTestTrainer.Model
+
+
+<h3>BeynesTest</h3>
+<div style="margin-top:400px">
+    <div class="row">
+        <div hidden="@(!HideText)" class="dot mx-auto"></div>
+        <p hidden="@(HideText)" class="mx-auto displayResult">@(ColorName)</p>
+    </div>
+
+    <div hidden="@ConfigHide" class="mx-auto" style="width: 20%">
+        <div class="btn-primary m-2 text-center mx-auto w-25" @onclick=@LaunchTest>Go</div>
+        
+        <div class="btn-success m-2 text-center mx-auto w-25" @onclick=@AddColor>Add Color</div>
+        
+        <input type="range" class="form-control" min="0" max="1000" step="10" @bind-value=@DotSize>
+        
+        <div class="row m-4">
+            <label class="col-6 text-right">Display Time</label>
+            <input type="number" class="col-6 form-control" @bind-value="@Test.ShowTime">
+        </div>
+        <div class="row m-4">
+            <label class="col-6 text-right">Off Time</label>
+            <input type="number" class="col-6 form-control" @bind-value="@Test.OffTime">
+        </div>
+    
+        @foreach (var color in Test.ColorList)
+        {
+            <div class="card m-1">
+                
+                <div class="btn-warning m-1 text-center mx-auto w-25" @onclick="() => RemoveColor(color)">Remove Color</div>
+
+                <div class="row m-2">
+                    <label class="col-6 text-right">ColorName</label>
+                    <input type="text" class="col-6 form-control" @bind-value=@color.Name>
+                </div>
+                <div class="row m-2">
+                    <label class="col-6 text-right">R</label>
+                    <input type="number" class="col-6 form-control" @bind-value=@color.R>
+                </div>
+                <div class="row m-2">
+                    <label class="col-6 text-right">G</label>
+                    <input type="number" class="col-6 form-control" @bind-value=@color.G>
+                </div>
+                <div class="row m-2">
+                    <label class="col-6 text-right">B</label>
+                    <input type="number" class="col-6 form-control" @bind-value=@color.B>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<style>
+ .dot{
+     height: @(DotSize+"px");
+     width: @(DotSize+"px");
+     background-color: rgb(@CurrentColor.R , @CurrentColor.G , @CurrentColor.B);
+     border-radius: 50%;
+     display: inline-block;
+ }
+ 
+ .displayResult{
+    color: white;
+    font-weight: bold;
+    font-size: @(DotSize/10+"px");
+    margin-top: @(DotSize/2+"px");
+ }
+ 
+ body{
+    background-color: black;
+ }
+</style>
+
+@code {
+    protected bool ConfigHide { get; set; }
+    protected string ColorName { get; set; }
+    protected DefinedColor CurrentColor = new ("",255, 255, 255);
+    protected BeynesTestModel Test { get; set; }
+    
+    protected bool HideText = true;
+
+    private int _dotsize = 150;
+    protected int DotSize
+    {
+        get => _dotsize;
+        set
+        {
+            _dotsize = value;
+            StateHasChanged();
+        }
+    }
+    
+    protected override void OnInitialized()
+    {
+        ConfigHide = false;
+        var rand = new Random();
+        Test = new BeynesTestModel();
+        Test.OffTime = 3000;
+        Test.ShowTime = 1000;
+        for (int i = 0; i < 5; i++)
+        {
+            Test.ColorList.Add(new DefinedColor("",(byte) rand.Next(0,255),(byte) rand.Next(0,255),(byte) rand.Next(0,255)));
+        }
+        
+        base.OnInitialized();
+    }
+
+
+    private async Task PlayRandomly()
+    {
+        var colorListCopy = Test.ColorList.ToList();
+
+        var r = new Random();
+
+        foreach (var color in Test.ColorList)
+        {
+            HideText = true;
+            var index = r.Next(0, colorListCopy.Count);
+            CurrentColor = colorListCopy[index];
+            StateHasChanged();
+            await Task.Delay(Test.ShowTime);
+            HideText = false;
+            ColorName = colorListCopy[index].Name;
+            StateHasChanged();
+            await Task.Delay(Test.OffTime);
+            colorListCopy.RemoveAt(index);
+        }
+    }
+    
+
+    private async Task LaunchTest()
+    {
+        ConfigHide = true;
+        CurrentColor = new DefinedColor("",0, 0, 0);
+        HideText = true;
+        StateHasChanged();
+        await Task.Delay(1000);
+
+
+        await PlayRandomly();
+        // foreach (var color in Test.ColorList)
+        // {
+        //     HideText = true;
+        //     CurrentColor = color;
+        //     StateHasChanged();
+        //     await Task.Delay(Test.ShowTime);
+        //     HideText = false;
+        //     ColorName = color.Name;
+        //     StateHasChanged();
+        //     await Task.Delay(Test.OffTime);
+        // }
+
+        HideText = true;
+        CurrentColor = new DefinedColor("",255, 255, 255);
+        ConfigHide = false;
+        StateHasChanged();
+        await Task.Delay(10);
+    }
+
+
+    private EventCallback RemoveColor(DefinedColor color)
+    {
+        Test.ColorList.Remove(color);
+        StateHasChanged();
+        return EventCallback.Empty;
+    }
+
+    private void AddColor()
+    {
+        Test.ColorList.Add(new DefinedColor("",0,0,0));
+    }
+
+
+}
