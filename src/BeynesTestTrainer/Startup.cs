@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace beynesTest
+namespace BeynesTestTrainer
 {
     public class Startup
     {
@@ -53,7 +53,7 @@ namespace beynesTest
                 endpoints.MapFallbackToPage("/_Host");
             });
             
-            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions(){Center = true,Fullscreen = true}));
+            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions(){Center = true}));
         }
     }
 }

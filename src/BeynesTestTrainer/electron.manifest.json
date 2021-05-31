@@ -1,17 +1,17 @@
 {
-  "executable": "beynesTest",
+  "executable": "BeynesTestTrainer",
   "splashscreen": {
     "imageFile": ""
   },
-  "name": "beynesTest",
+  "name": "BeynesTestTrainer",
   "author": "",
   "singleInstance": false,
   "environment": "Production",
   "build": {
     "appId": "com.beynesTest.app",
-    "productName": "beynesTest",
+    "productName": "BeynesTestTrainer",
     "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.0",
+    "buildVersion": "0.0.1",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"

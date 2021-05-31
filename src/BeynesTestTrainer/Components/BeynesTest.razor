@@ -4,18 +4,27 @@
 
 
 <h3>BeynesTest</h3>
-<div style="margin-top:400px">
+<div style="margin-top:@(TopMargin+"px")">
     <div class="row">
         <div hidden="@(!HideText)" class="dot mx-auto"></div>
         <p hidden="@(HideText)" class="mx-auto displayResult">@(ColorName)</p>
     </div>
 
-    <div hidden="@ConfigHide" class="mx-auto" style="width: 20%">
+    <div hidden="@ConfigHide" class="mx-auto col-sm-8 col-lg-5 col-md-5 col-xl-5" >
         <div class="btn-primary m-2 text-center mx-auto w-25" @onclick=@LaunchTest>Go</div>
         
         <div class="btn-success m-2 text-center mx-auto w-25" @onclick=@AddColor>Add Color</div>
         
-        <input type="range" class="form-control" min="0" max="1000" step="10" @bind-value=@DotSize>
+        <div class="row m-4">
+            <label class="col-3 text-right">Dot size</label>
+            <input type="range" class="form-control col-9" min="0" max="1000" step="10" @bind-value=@DotSize>
+        </div>
+        
+        <div class="row m-4">
+            <label class="col-3 text-right">Top margin</label>
+            <input type="range" class="form-control col-9" min="0" max="900" step="10" @bind-value=@TopMargin>
+        </div>
+
         
         <div class="row m-4">
             <label class="col-6 text-right">Display Time</label>
@@ -76,14 +85,35 @@
 </style>
 
 @code {
-    protected bool ConfigHide { get; set; }
-    protected string ColorName { get; set; }
+
+    protected bool ConfigHide
+    {
+        get => _configHide;
+        set => _configHide = value;
+    }
+
+    protected string ColorName
+    {
+        get => _colorName;
+        set => _colorName = value;
+    }
+
     protected DefinedColor CurrentColor = new ("",255, 255, 255);
-    protected BeynesTestModel Test { get; set; }
-    
+
+    protected BeynesTestModel Test
+    {
+        get => _test;
+        set => _test = value;
+    }
+
     protected bool HideText = true;
 
     private int _dotsize = 150;
+    private bool _configHide;
+    private string _colorName;
+    private BeynesTestModel _test;
+    private int _topMargin = 400;
+
     protected int DotSize
     {
         get => _dotsize;
@@ -93,7 +123,17 @@
             StateHasChanged();
         }
     }
-    
+
+    protected int TopMargin  
+    {
+        get => _topMargin;
+        set
+        {
+            _topMargin = value;
+            StateHasChanged();
+        }
+    }
+
     protected override void OnInitialized()
     {
         ConfigHide = false;

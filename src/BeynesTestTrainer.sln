@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "beynesTest", "beynesTest\beynesTest.csproj", "{45B4952A-1F8B-43EB-87B1-681A5EC8D269}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "beynesTest", "BeynesTestTrainer\BeynesTestTrainer.csproj", "{45B4952A-1F8B-43EB-87B1-681A5EC8D269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

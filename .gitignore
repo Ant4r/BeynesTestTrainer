@@ -2,3 +2,6 @@
 /src/beynesTest/obj*
 /src/bin*
 /src/obj*
+/src/.idea*
+/src/BeynesTestTrainer/bin*
+/src/BeynesTestTrainer/obj/*

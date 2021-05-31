@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>WinExe</OutputType>
+    <AssemblyName>BeynesTestTrainer</AssemblyName>
+    <RootNamespace>BeynesTestTrainer</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>
