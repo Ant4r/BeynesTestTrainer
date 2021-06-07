@@ -4,28 +4,33 @@
 
 
 <h3>BeynesTest</h3>
-<div style="margin-top:@(TopMargin+"px")">
+<div style="margin-top:@(TopMargin + "px")">
     <div class="row">
         <div hidden="@(!HideText)" class="dot mx-auto"></div>
         <p hidden="@(HideText)" class="mx-auto displayResult">@(ColorName)</p>
     </div>
 
-    <div hidden="@ConfigHide" class="mx-auto col-sm-8 col-lg-5 col-md-5 col-xl-5" >
+    <div hidden="@ConfigHide" class="mx-auto col-sm-8 col-lg-5 col-md-5 col-xl-5">
         <div class="btn-primary m-2 text-center mx-auto w-25" @onclick=@LaunchTest>Go</div>
-        
+
         <div class="btn-success m-2 text-center mx-auto w-25" @onclick=@AddColor>Add Color</div>
-        
+
         <div class="row m-4">
             <label class="col-3 text-right">Dot size</label>
             <input type="range" class="form-control col-9" min="0" max="1000" step="10" @bind-value=@DotSize>
         </div>
-        
+
+        <div class="row m-4">
+            <label class="col-3 displayResult text-right">Font size</label>
+            <input type="range" class="form-control col-9" min="0" max="200" step="2" @bind-value=Fontsize>
+        </div>
+
         <div class="row m-4">
             <label class="col-3 text-right">Top margin</label>
             <input type="range" class="form-control col-9" min="0" max="900" step="10" @bind-value=@TopMargin>
         </div>
 
-        
+
         <div class="row m-4">
             <label class="col-6 text-right">Display Time</label>
             <input type="number" class="col-6 form-control" @bind-value="@Test.ShowTime">
@@ -34,13 +39,13 @@
             <label class="col-6 text-right">Off Time</label>
             <input type="number" class="col-6 form-control" @bind-value="@Test.OffTime">
         </div>
-    
+
         @foreach (var color in Test.ColorList)
         {
             <div class="card m-1">
-                
-                <div class="btn-warning m-1 text-center mx-auto w-25" @onclick="() => RemoveColor(color)">Remove Color</div>
 
+                <div class="btn-warning m-1 text-center mx-auto w-25" @onclick="() => RemoveColor(color)">Remove Color</div>
+                <div class="row m-2 dot-preview mx-auto" style="background-color: rgb(@color.R , @color.G , @color.B)"></div>
                 <div class="row m-2">
                     <label class="col-6 text-right">ColorName</label>
                     <input type="text" class="col-6 form-control" @bind-value=@color.Name>
@@ -65,18 +70,25 @@
 
 <style>
  .dot{
-     height: @(DotSize+"px");
-     width: @(DotSize+"px");
+     height: @(DotSize + "px");
+     width: @(DotSize + "px");
      background-color: rgb(@CurrentColor.R , @CurrentColor.G , @CurrentColor.B);
      border-radius: 50%;
      display: inline-block;
  }
  
+  .dot-preview{
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      display: inline-block;
+  }
+ 
  .displayResult{
     color: white;
     font-weight: bold;
-    font-size: @(DotSize/10+"px");
-    margin-top: @(DotSize/2+"px");
+    font-size: @(Fontsize + "px");
+    margin-top: @(Fontsize + "px");
  }
  
  body{
@@ -98,7 +110,7 @@
         set => _colorName = value;
     }
 
-    protected DefinedColor CurrentColor = new ("",255, 255, 255);
+    protected DefinedColor CurrentColor = new("", 255, 255, 255);
 
     protected BeynesTestModel Test
     {
@@ -108,6 +120,8 @@
 
     protected bool HideText = true;
 
+
+    private int _fontsize = 25;
     private int _dotsize = 150;
     private bool _configHide;
     private string _colorName;
@@ -124,12 +138,22 @@
         }
     }
 
-    protected int TopMargin  
+    protected int TopMargin
     {
         get => _topMargin;
         set
         {
             _topMargin = value;
+            StateHasChanged();
+        }
+    }
+
+    public int Fontsize
+    {
+        get => _fontsize;
+        set
+        {
+            _fontsize = value;
             StateHasChanged();
         }
     }
@@ -143,9 +167,9 @@
         Test.ShowTime = 1000;
         for (int i = 0; i < 5; i++)
         {
-            Test.ColorList.Add(new DefinedColor("",(byte) rand.Next(0,255),(byte) rand.Next(0,255),(byte) rand.Next(0,255)));
+            Test.ColorList.Add(new DefinedColor("", (byte) rand.Next(0, 255), (byte) rand.Next(0, 255), (byte) rand.Next(0, 255)));
         }
-        
+
         base.OnInitialized();
     }
 
@@ -170,32 +194,32 @@
             colorListCopy.RemoveAt(index);
         }
     }
-    
+
 
     private async Task LaunchTest()
     {
         ConfigHide = true;
-        CurrentColor = new DefinedColor("",0, 0, 0);
+        CurrentColor = new DefinedColor("", 0, 0, 0);
         HideText = true;
         StateHasChanged();
         await Task.Delay(1000);
 
 
         await PlayRandomly();
-        // foreach (var color in Test.ColorList)
-        // {
-        //     HideText = true;
-        //     CurrentColor = color;
-        //     StateHasChanged();
-        //     await Task.Delay(Test.ShowTime);
-        //     HideText = false;
-        //     ColorName = color.Name;
-        //     StateHasChanged();
-        //     await Task.Delay(Test.OffTime);
-        // }
+    // foreach (var color in Test.ColorList)
+    // {
+    //     HideText = true;
+    //     CurrentColor = color;
+    //     StateHasChanged();
+    //     await Task.Delay(Test.ShowTime);
+    //     HideText = false;
+    //     ColorName = color.Name;
+    //     StateHasChanged();
+    //     await Task.Delay(Test.OffTime);
+    // }
 
         HideText = true;
-        CurrentColor = new DefinedColor("",255, 255, 255);
+        CurrentColor = new DefinedColor("", 255, 255, 255);
         ConfigHide = false;
         StateHasChanged();
         await Task.Delay(10);
@@ -211,7 +235,7 @@
 
     private void AddColor()
     {
-        Test.ColorList.Add(new DefinedColor("",0,0,0));
+        Test.ColorList.Add(new DefinedColor("", 0, 0, 0));
     }
 
 
