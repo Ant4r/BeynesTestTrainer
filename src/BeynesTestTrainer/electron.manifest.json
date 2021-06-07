@@ -10,8 +10,8 @@
   "build": {
     "appId": "com.beynesTest.app",
     "productName": "BeynesTestTrainer",
-    "copyright": "Copyright © 2020",
-    "buildVersion": "0.0.1",
+    "copyright": "Copyright © 2021",
+    "buildVersion": "0.0.2",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
