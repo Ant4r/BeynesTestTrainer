@@ -1,6 +1,7 @@
 @using System.Drawing
 @using System.Threading
 @using BeynesTestTrainer.Model
+@inject IJSRuntime JS
 
 
 <h3>BeynesTest</h3>
@@ -12,7 +13,7 @@
 
     <div hidden="@ConfigHide" class="mx-auto col-sm-8 col-lg-5 col-md-5 col-xl-5" >
         <div class="btn-primary m-2 text-center mx-auto w-25" @onclick=@LaunchTest>Go</div>
-        
+        <div class="btn-info m-2 text-center mx-auto w-25" @onclick="ToggleFullScreen">Full Screen</div>
         <div class="btn-success m-2 text-center mx-auto w-25" @onclick=@AddColor>Add Color</div>
         
         <div class="row m-4">
@@ -182,23 +183,13 @@
 
 
         await PlayRandomly();
-        // foreach (var color in Test.ColorList)
-        // {
-        //     HideText = true;
-        //     CurrentColor = color;
-        //     StateHasChanged();
-        //     await Task.Delay(Test.ShowTime);
-        //     HideText = false;
-        //     ColorName = color.Name;
-        //     StateHasChanged();
-        //     await Task.Delay(Test.OffTime);
-        // }
 
         HideText = true;
         CurrentColor = new DefinedColor("",255, 255, 255);
         ConfigHide = false;
         StateHasChanged();
         await Task.Delay(10);
+        await ToggleFullScreen();
     }
 
 
@@ -213,6 +204,8 @@
     {
         Test.ColorList.Add(new DefinedColor("",0,0,0));
     }
+
+    private async Task ToggleFullScreen() => await JS.InvokeVoidAsync("beynesTest.toggleFullScreen");
 
 
 }
